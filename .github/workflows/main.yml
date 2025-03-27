@@ -1,0 +1,40 @@
+name: Build NetHunter Pro
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install essential packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git debos bmap-tools xz-utils
+
+    - name: Install additional packages for Qualcomm-based devices
+      run: |
+        sudo apt-get install -y android-sdk-libsparse-utils yq
+
+    - name: Check for KVM support and install KVM packages
+      run: |
+        sudo apt-get install -y cpu-checker
+        kvm-ok || echo "KVM acceleration is not supported on this hardware."
+        sudo apt-get install -y qemu-system-x86
+        sudo adduser $(id -un) libvirt
+        sudo adduser $(id -un) kvm
+        sudo reboot
+
+    - name: Install F2FS tools
+      run: |
+        sudo apt-get install -y f2fs-tools
+
+    - name: Build NetHunter Pro
+      run: |
+        # Add your build commands here
+        echo "Building NetHunter Pro..."
+        sudo ./build.sh -t qcom  -v -D -F f2fs -i -s -Z -r
