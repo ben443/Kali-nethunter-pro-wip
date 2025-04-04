@@ -1,17 +1,38 @@
-chipset = "sdm845"
+chipset = "sm8250"
+
 
 [bootimg]
+
 base = 0x0
+
 kernel = 0x8000
-ramdisk = 0x1000000
-second = 0
-tags = 0x100
+
+ramdisk = 0x200000
+
+second = 0x0
+
+tags = 0x1e0000
+
 pagesize = 4096
 
+dtb_size = 1580275
+
+dtb_offset = 0x1f00000
+
+
 [[device]]
-vendor = "oneplus"
-model = "enchilada"
-append = "console=ttyMSM0,115200"
+
+vendor = "samsung"
+
+model = "s20fe"
+
+variant = "r8q"
+
+chipset = "sm8250"
+
+append = "root=/dev/block/bootdevice/by-name/userdata rw splash quiet rootmnt=/root console=ttyMSM0,115200"
+
+
 
 [[device]]
 vendor = "oneplus"
