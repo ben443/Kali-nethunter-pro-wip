@@ -23,19 +23,10 @@ bootimg_offsets() {
     local ARGS="--kernel_offset ${KERNEL} --ramdisk_offset ${RAMDISK}"
     ARGS="${ARGS} --second_offset ${SECOND} --tags_offset ${TAGS}"
     ARGS="${ARGS} --pagesize ${PAGE_SIZE}"
-
-    if [ "${VERSION}" != "0" ]; then
-        ARGS="${ARGS} --header_version ${VERSION}"
-    fi
-
-    if [ "${DTB}" ]; then
-        ARGS="${ARGS} --dtb_offset ${DTB}"
-    fi
-
-    echo "${ARGS}"
-}
-
-ROOTPART="UUID=$(findmnt -n -o UUID /)"
+    ARGS="${ARGS} --dtb_offset ${DTB}"
+    ARGS="${ARGS} --header_version 2"
+   
+ ROOTPART="UUID=$(findmnt -n -o UUID /)"
 if [ "${ROOTPART}" = "UUID=" ]; then
     # This means we're using an encrypted rootfs
     ROOTPART="/dev/mapper/root"
@@ -73,22 +64,14 @@ for i in $(seq 0 $(tomlq -r '.device | length - 1' ${CONFIG})); do
             LOGLEVEL="loglevel=7"
         fi
     fi
-
-    if [ "${DEVICE_BOOTIMG}" ]; then
-        BOOTIMG_ARGS="$(bootimg_offsets "${DEVICE_BOOTIMG}")"
-    else
-        BOOTIMG_ARGS="${MKBOOTIMG_ARGS}"
-    fi
-
-    if echo "${BOOTIMG_ARGS}" | grep -q "dtb_offset"; then
-        BOOTIMG_ARGS="${BOOTIMG_ARGS} --dtb ${DTB_FILE}"
-    fi
-
+       
+        BOOTIMG_ARGS="${BOOTIMG_ARGS}"
+    
     echo "Creating boot image for ${FULLMODEL}..."
-    cat /boot/vmlinuz-${KERNEL_VERSION} ${DTB_FILE} > /tmp/kernel-dtb
+    cat /boot/vmlinuz-${KERNEL_VERSION} > /tmp/kernel
 
     # Create the bootimg as it's the only format recognized by the Android bootloader
     mkbootimg -o /bootimg-${FULLMODEL} ${BOOTIMG_ARGS} \
-        --kernel /tmp/kernel-dtb --ramdisk /boot/initrd.img-${KERNEL_VERSION} \
+        --kernel /tmp/kernel --dtb ${DTB_FILE} --ramdisk /boot/initrd.img-${KERNEL_VERSION} \
         --cmdline "mobile.root=${ROOTPART} ${CMDLINE} init=/sbin/init ro ${LOGLEVEL} splash"
 done
