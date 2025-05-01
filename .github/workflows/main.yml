@@ -26,14 +26,9 @@ jobs:
         kvm-ok || echo "KVM acceleration is not supported on this hardware."
         sudo apt-get install -y qemu-system-x86
         sudo adduser $(id -un) kvm
-        sudo reboot
-
-    - name: Install F2FS tools
-      run: |
-        sudo apt-get install -y f2fs-tools
 
     - name: Build NetHunter Pro
       run: |
         # Add your build commands here
         echo "Building NetHunter Pro..."
-        sudo ./build.sh -t qcom  -v -D -F f2fs -i -s -Z -r
+        sudo ./build.sh -t qcom  -v -D -F ext4 -i -s -Z -r
