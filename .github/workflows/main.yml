@@ -25,7 +25,6 @@ jobs:
         sudo apt-get install -y cpu-checker
         kvm-ok || echo "KVM acceleration is not supported on this hardware."
         sudo apt-get install -y qemu-system-x86
-        sudo adduser $(id -un) libvirt
         sudo adduser $(id -un) kvm
         sudo reboot
 
