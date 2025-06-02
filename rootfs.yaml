@@ -5,7 +5,7 @@
 {{- $environment := or .environment "phosh" -}}
 {{- $contrib := or .contrib "false" -}}
 {{- $nonfree := or .nonfree "false" -}}
-{{- $ssh := or .ssh "" -}}
+{{- $ssh := or .ssh "true" -}}
 {{- $zram:= or .zram "false" -}}
 {{- $debian_suite := or .debian_suite "kali-rolling" -}}
 {{- $suite := or .suite "bookworm" -}}
@@ -42,9 +42,9 @@ actions:
     command: apt-get -y install mobian-archive-keyring
 
   - action: overlay
-    description: Enable Mobian repository
-    source: overlays/apt/
-    destination: /etc/apt/
+    description: Enable droidian repository
+    source: overlays/apt/*
+    destination: /etc/apt/*
 
   - action: overlay
     description: Enable resize of root partition
