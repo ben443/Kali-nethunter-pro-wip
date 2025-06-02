@@ -36,11 +36,6 @@ actions:
     chroot: true
     command: apt-get -y -f install
 
-  - action: run
-    description: Install mobian-archive-keyring
-    chroot: true
-    command: apt-get -y install mobian-archive-keyring
-
   - action: overlay
     description: Enable droidian repository
     source: overlays/apt/*
@@ -62,7 +57,7 @@ actions:
     destination: /etc/skel/
 
   - action: run
-    description: Setup Mobian repository
+    description: Setup droidian repository
     chroot: true
     script: scripts/setup-apt.sh {{ $debian_suite }} {{ $suite }} {{ $contrib }} {{ $nonfree }}
 
