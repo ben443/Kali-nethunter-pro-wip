@@ -1,0 +1,5 @@
+Components: main
+Suites: rolling
+Uris: droidian+http://releases.droidian.org/
+Types: deb
+Signed-By: /etc/apt/trusted.gpg.d/droidian.gpg
